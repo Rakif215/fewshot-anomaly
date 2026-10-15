@@ -8,10 +8,13 @@ OUT=results/smoke_visa_1shot_vits
 mkdir -p "$OUT"
 DATA="$(pwd)/datasets/VisA_pytorch/1cls"
 
-echo "== SubspaceAD (dinov2-with-registers-small, 448 px, 1-shot)"
+# Default layers (-12..-18) only exist in the giant model; -4,-5 is the authors' own setting for 12-layer
+# S/B backbones (scripts/backbone_ablation.sh: same 55-70% relative depth).
+echo "== SubspaceAD (dinov2-with-registers-small, layers -4,-5, 448 px, 1-shot)"
 time python third_party/SubspaceAD/main.py \
   --dataset_name visa --dataset_path "$DATA" \
   --model_ckpt facebook/dinov2-with-registers-small --image_res 448 \
+  --layers=-4,-5 \
   --k_shot 1 --aug_count 30 --pca_ev 0.99 \
   --outdir "$OUT/subspacead" 2>&1 | tee "$OUT/subspacead.log"
 
