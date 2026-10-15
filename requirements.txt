@@ -1,0 +1,13 @@
+# torch/torchvision are installed from the CPU index in scripts/setup.sh
+transformers
+opencv-python-headless
+kornia
+numpy
+pandas
+scikit-learn
+scipy
+Pillow
+tqdm
+pyyaml
+matplotlib
+faiss-cpu
