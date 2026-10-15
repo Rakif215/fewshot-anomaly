@@ -7,6 +7,8 @@ cd "$(dirname "$0")/.."
 OUT=results/smoke_visa_1shot_vits
 mkdir -p "$OUT"
 DATA="$(pwd)/datasets/VisA_pytorch/1cls"
+# Compatibility shims for newer library versions (third_party code stays unmodified).
+export PYTHONPATH="$(pwd)/scripts/compat${PYTHONPATH:+:$PYTHONPATH}"
 
 # Default layers (-12..-18) only exist in the giant model; -4,-5 is the authors' own setting for 12-layer
 # S/B backbones (scripts/backbone_ablation.sh: same 55-70% relative depth).
