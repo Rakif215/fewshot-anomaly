@@ -11,3 +11,4 @@ tqdm
 pyyaml
 matplotlib
 faiss-cpu
+tifffile
