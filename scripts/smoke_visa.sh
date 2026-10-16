@@ -9,7 +9,7 @@ cd "$(dirname "$0")/.."
 OUT=results/smoke_visa_1shot_vits
 mkdir -p "$OUT"
 DATA="$(pwd)/datasets/VisA_pytorch/1cls"
-# NOTE: AnomalyDINO always plots examples after evaluation, so --no-save_examples makes it crash at the very end.
+# NOTE: AnomalyDINO always plots examples after evaluation, so makes it crash at the very end.
 # Compatibility shims for newer library versions (third_party code stays unmodified).
 export PYTHONPATH="$(pwd)/scripts/compat${PYTHONPATH:+:$PYTHONPATH}"
 
@@ -29,7 +29,7 @@ if [ "${ONLY:-}" != "subspacead" ]; then
 echo "== AnomalyDINO (dinov2_vits14, 448 px, 1-shot, CPU FAISS)"
 ( cd third_party/AnomalyDINO && time python run_anomalydino.py \
   --dataset VisA --data_root "$DATA/" --model_name dinov2_vits14 --resolution 448 \
-  --shots 1 --num_seeds 1 --device cpu --faiss_on_cpu --no-save_examples \
+  --shots 1 --num_seeds 1 --device cpu --faiss_on_cpu \
   --tag smoke_vits ) 2>&1 | tee "$OUT/anomalydino.log"
 fi
 
