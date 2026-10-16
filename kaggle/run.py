@@ -18,7 +18,7 @@ sh("pip install -q -e third_party/SubspaceAD --no-deps")
 sh("bash scripts/get_visa.sh")
 env = dict(os.environ, SUBSPACEAD_KEEP_ATTN_LAYER="6", PYTHONPATH=f"{REPO}/scripts/compat:" + os.environ.get("PYTHONPATH", ""))
 DATA = f"{REPO}/datasets/VisA_pytorch/1cls"
-for k in (1, 2, 4):
+for k in (4,):
     t = time.time()
     out = f"{OUT}/visa_k{k}_dinov2G"
     cmd = (f"python -u third_party/SubspaceAD/main.py --dataset_name visa --dataset_path {DATA} --image_res 672 --k_shot {k} "

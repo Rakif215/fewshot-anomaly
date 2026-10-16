@@ -1,0 +1,349 @@
+2026-10-16 08:40:39,411 - INFO - Logging configured.
+2026-10-16 08:40:39,412 - INFO - Configuration saved to /kaggle/working/results/visa_k2_dinov2G/visa_mean_layers-12-13-14-15-16-17-18_res672_docrop0_score-reconstruction_clahe0_dropk0_model-dinov2-with-registers-giantpca_ev0.99_i-scoremtop1p_k2_aug30xr_seed42/config.json
+2026-10-16 08:40:39,412 - INFO - Initializing Augmentations
+2026-10-16 08:40:39,412 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 08:40:39,412 - INFO - Loading feature extraction model: facebook/dinov2-with-registers-giant...
+2026-10-16 08:40:39,542 - INFO - HTTP Request: HEAD https://huggingface.co/facebook/dinov2-with-registers-giant/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-10-16 08:40:39,543 - WARNING - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-10-16 08:40:39,582 - INFO - HTTP Request: HEAD https://huggingface.co/facebook/dinov2-with-registers-giant/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-10-16 08:40:39,597 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/facebook/dinov2-with-registers-giant/8d0d49f77fb8b5dd78842496ff14afe7dd4d85cb/preprocessor_config.json "HTTP/1.1 200 OK"
+2026-10-16 08:40:39,637 - INFO - HTTP Request: HEAD https://huggingface.co/facebook/dinov2-with-registers-giant/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+2026-10-16 08:40:39,676 - INFO - HTTP Request: HEAD https://huggingface.co/facebook/dinov2-with-registers-giant/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-10-16 08:40:39,692 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/facebook/dinov2-with-registers-giant/8d0d49f77fb8b5dd78842496ff14afe7dd4d85cb/preprocessor_config.json "HTTP/1.1 200 OK"
+2026-10-16 08:40:39,731 - INFO - HTTP Request: HEAD https://huggingface.co/facebook/dinov2-with-registers-giant/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-10-16 08:40:39,748 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/facebook/dinov2-with-registers-giant/8d0d49f77fb8b5dd78842496ff14afe7dd4d85cb/config.json "HTTP/1.1 200 OK"
+2026-10-16 08:40:39,791 - INFO - HTTP Request: HEAD https://huggingface.co/facebook/dinov2-with-registers-giant/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-10-16 08:40:39,807 - INFO - HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/facebook/dinov2-with-registers-giant/8d0d49f77fb8b5dd78842496ff14afe7dd4d85cb/config.json "HTTP/1.1 200 OK"
+2026-10-16 08:40:41,901 - INFO - Set model attention implementation to 'eager'.
+2026-10-16 08:40:41,901 - INFO - Model loaded successfully.
+2026-10-16 08:40:41,901 - INFO - --- Processing Category: candle ---
+2026-10-16 08:40:41,901 - INFO - Initializing Augmentations
+2026-10-16 08:40:41,902 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 08:40:41,904 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 08:40:41,905 - INFO -   K-Shot image 1/2: 0099.JPG
+2026-10-16 08:40:41,905 - INFO -   K-Shot image 2/2: 0973.JPG
+2026-10-16 08:40:45,395 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 08:40:45,396 - INFO - Starting PCA fit on cuda...
+2026-10-16 08:40:45,396 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 08:44:21,322 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 08:47:59,789 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 08:48:00,081 - INFO - PCA: selected k=927 components to explain 99.00% of variance.
+2026-10-16 08:48:00,089 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 08:48:00,089 - INFO - Performing warm-up inference run...
+2026-10-16 08:48:03,593 - INFO - Warm-up complete.
+2026-10-16 08:48:03,594 - INFO - Evaluating on 200 test images...
+2026-10-16 08:48:03,594 - INFO - Number of test images: 200
+2026-10-16 09:00:23,427 - INFO - --- Timing Results for candle ---
+2026-10-16 09:00:23,428 - INFO - Total test images: 200
+2026-10-16 09:00:23,428 - INFO - Batch size: 1 (Processed 200 batches)
+2026-10-16 09:00:23,428 - INFO - Total inference time: 709.6637 s
+2026-10-16 09:00:23,428 - INFO - Avg. time per image: 3.548319 s
+2026-10-16 09:00:23,428 - INFO - Images per second (FPS): 0.28
+2026-10-16 09:00:23,428 - INFO - Avg. time per batch (excl. 1st): 3.548464 s
+2026-10-16 09:00:23,429 - INFO - Median time per batch (excl. 1st): 3.552487 s
+2026-10-16 09:01:10,193 - INFO - candle Results | I-AUROC: 0.9322 | I-AUPR: 0.9244 | P-AUROC: 0.9940 | AU-PRO: 0.9824 | I-F1: nan | P-F1: nan
+2026-10-16 09:01:10,193 - INFO - --- Processing Category: capsules ---
+2026-10-16 09:01:10,193 - INFO - Initializing Augmentations
+2026-10-16 09:01:10,194 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 09:01:10,195 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 09:01:10,196 - INFO -   K-Shot image 1/2: 302.JPG
+2026-10-16 09:01:10,196 - INFO -   K-Shot image 2/2: 202.JPG
+2026-10-16 09:01:13,500 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 09:01:13,500 - INFO - Starting PCA fit on cuda...
+2026-10-16 09:01:13,500 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 09:04:50,506 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 09:08:29,246 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 09:08:29,479 - INFO - PCA: selected k=981 components to explain 99.00% of variance.
+2026-10-16 09:08:29,496 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 09:08:29,496 - INFO - Performing warm-up inference run...
+2026-10-16 09:08:33,028 - INFO - Warm-up complete.
+2026-10-16 09:08:33,028 - INFO - Evaluating on 160 test images...
+2026-10-16 09:08:36,481 - INFO - Number of test images: 160
+2026-10-16 09:18:28,036 - INFO - --- Timing Results for capsules ---
+2026-10-16 09:18:28,036 - INFO - Total test images: 160
+2026-10-16 09:18:28,036 - INFO - Batch size: 1 (Processed 160 batches)
+2026-10-16 09:18:28,037 - INFO - Total inference time: 567.0473 s
+2026-10-16 09:18:28,037 - INFO - Avg. time per image: 3.544046 s
+2026-10-16 09:18:28,037 - INFO - Images per second (FPS): 0.28
+2026-10-16 09:18:28,037 - INFO - Avg. time per batch (excl. 1st): 3.544734 s
+2026-10-16 09:18:28,037 - INFO - Median time per batch (excl. 1st): 3.543305 s
+2026-10-16 09:19:05,010 - INFO - capsules Results | I-AUROC: 0.9695 | I-AUPR: 0.9817 | P-AUROC: 0.9862 | AU-PRO: 0.9726 | I-F1: nan | P-F1: nan
+2026-10-16 09:19:05,010 - INFO - --- Processing Category: cashew ---
+2026-10-16 09:19:05,010 - INFO - Initializing Augmentations
+2026-10-16 09:19:05,010 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 09:19:05,012 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 09:19:05,012 - INFO -   K-Shot image 1/2: 001.JPG
+2026-10-16 09:19:05,012 - INFO -   K-Shot image 2/2: 249.JPG
+2026-10-16 09:19:08,278 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 09:19:08,278 - INFO - Starting PCA fit on cuda...
+2026-10-16 09:19:08,278 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 09:22:44,623 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 09:26:23,622 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 09:26:23,856 - INFO - PCA: selected k=998 components to explain 99.00% of variance.
+2026-10-16 09:26:23,863 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 09:26:23,864 - INFO - Performing warm-up inference run...
+2026-10-16 09:26:27,372 - INFO - Warm-up complete.
+2026-10-16 09:26:27,372 - INFO - Evaluating on 150 test images...
+2026-10-16 09:26:30,099 - INFO - Number of test images: 150
+2026-10-16 09:35:44,239 - INFO - --- Timing Results for cashew ---
+2026-10-16 09:35:44,239 - INFO - Total test images: 150
+2026-10-16 09:35:44,239 - INFO - Batch size: 1 (Processed 150 batches)
+2026-10-16 09:35:44,239 - INFO - Total inference time: 531.2870 s
+2026-10-16 09:35:44,239 - INFO - Avg. time per image: 3.541913 s
+2026-10-16 09:35:44,239 - INFO - Images per second (FPS): 0.28
+2026-10-16 09:35:44,239 - INFO - Avg. time per batch (excl. 1st): 3.542592 s
+2026-10-16 09:35:44,240 - INFO - Median time per batch (excl. 1st): 3.544184 s
+2026-10-16 09:36:19,191 - INFO - cashew Results | I-AUROC: 0.9906 | I-AUPR: 0.9951 | P-AUROC: 0.9912 | AU-PRO: 0.9872 | I-F1: nan | P-F1: nan
+2026-10-16 09:36:19,191 - INFO - --- Processing Category: chewinggum ---
+2026-10-16 09:36:19,191 - INFO - Initializing Augmentations
+2026-10-16 09:36:19,191 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 09:36:19,193 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 09:36:19,193 - INFO -   K-Shot image 1/2: 226.JPG
+2026-10-16 09:36:19,194 - INFO -   K-Shot image 2/2: 311.JPG
+2026-10-16 09:36:22,462 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 09:36:22,463 - INFO - Starting PCA fit on cuda...
+2026-10-16 09:36:22,463 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 09:39:58,900 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 09:43:37,519 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 09:43:37,757 - INFO - PCA: selected k=1014 components to explain 99.00% of variance.
+2026-10-16 09:43:37,765 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 09:43:37,765 - INFO - Performing warm-up inference run...
+2026-10-16 09:43:41,290 - INFO - Warm-up complete.
+2026-10-16 09:43:41,291 - INFO - Evaluating on 150 test images...
+2026-10-16 09:43:43,875 - INFO - Number of test images: 150
+2026-10-16 09:52:58,586 - INFO - --- Timing Results for chewinggum ---
+2026-10-16 09:52:58,586 - INFO - Total test images: 150
+2026-10-16 09:52:58,586 - INFO - Batch size: 1 (Processed 150 batches)
+2026-10-16 09:52:58,586 - INFO - Total inference time: 532.3381 s
+2026-10-16 09:52:58,586 - INFO - Avg. time per image: 3.548920 s
+2026-10-16 09:52:58,586 - INFO - Images per second (FPS): 0.28
+2026-10-16 09:52:58,586 - INFO - Avg. time per batch (excl. 1st): 3.549528 s
+2026-10-16 09:52:58,586 - INFO - Median time per batch (excl. 1st): 3.551639 s
+2026-10-16 09:53:33,333 - INFO - chewinggum Results | I-AUROC: 0.9914 | I-AUPR: 0.9955 | P-AUROC: 0.9965 | AU-PRO: 0.9624 | I-F1: nan | P-F1: nan
+2026-10-16 09:53:33,333 - INFO - --- Processing Category: fryum ---
+2026-10-16 09:53:33,333 - INFO - Initializing Augmentations
+2026-10-16 09:53:33,333 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 09:53:33,335 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 09:53:33,335 - INFO -   K-Shot image 1/2: 499.JPG
+2026-10-16 09:53:33,335 - INFO -   K-Shot image 2/2: 279.JPG
+2026-10-16 09:53:36,639 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 09:53:36,639 - INFO - Starting PCA fit on cuda...
+2026-10-16 09:53:36,639 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 09:57:13,373 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 10:00:52,194 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 10:00:52,431 - INFO - PCA: selected k=961 components to explain 99.00% of variance.
+2026-10-16 10:00:52,438 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 10:00:52,439 - INFO - Performing warm-up inference run...
+2026-10-16 10:00:56,017 - INFO - Warm-up complete.
+2026-10-16 10:00:56,017 - INFO - Evaluating on 150 test images...
+2026-10-16 10:00:58,477 - INFO - Number of test images: 150
+2026-10-16 10:10:11,162 - INFO - --- Timing Results for fryum ---
+2026-10-16 10:10:11,163 - INFO - Total test images: 150
+2026-10-16 10:10:11,163 - INFO - Batch size: 1 (Processed 150 batches)
+2026-10-16 10:10:11,163 - INFO - Total inference time: 530.7525 s
+2026-10-16 10:10:11,163 - INFO - Avg. time per image: 3.538350 s
+2026-10-16 10:10:11,163 - INFO - Images per second (FPS): 0.28
+2026-10-16 10:10:11,164 - INFO - Avg. time per batch (excl. 1st): 3.538695 s
+2026-10-16 10:10:11,164 - INFO - Median time per batch (excl. 1st): 3.540317 s
+2026-10-16 10:10:45,579 - INFO - fryum Results | I-AUROC: 0.9782 | I-AUPR: 0.9909 | P-AUROC: 0.9692 | AU-PRO: 0.9591 | I-F1: nan | P-F1: nan
+2026-10-16 10:10:45,580 - INFO - --- Processing Category: macaroni1 ---
+2026-10-16 10:10:45,580 - INFO - Initializing Augmentations
+2026-10-16 10:10:45,580 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 10:10:45,583 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 10:10:45,583 - INFO -   K-Shot image 1/2: 0860.JPG
+2026-10-16 10:10:45,583 - INFO -   K-Shot image 2/2: 0886.JPG
+2026-10-16 10:10:48,854 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 10:10:48,855 - INFO - Starting PCA fit on cuda...
+2026-10-16 10:10:48,855 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 10:14:25,364 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 10:18:04,583 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 10:18:04,823 - INFO - PCA: selected k=925 components to explain 99.00% of variance.
+2026-10-16 10:18:04,829 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 10:18:04,829 - INFO - Performing warm-up inference run...
+2026-10-16 10:18:08,353 - INFO - Warm-up complete.
+2026-10-16 10:18:08,353 - INFO - Evaluating on 200 test images...
+2026-10-16 10:18:10,836 - INFO - Number of test images: 200
+2026-10-16 10:30:28,034 - INFO - --- Timing Results for macaroni1 ---
+2026-10-16 10:30:28,034 - INFO - Total test images: 200
+2026-10-16 10:30:28,034 - INFO - Batch size: 1 (Processed 200 batches)
+2026-10-16 10:30:28,035 - INFO - Total inference time: 708.1562 s
+2026-10-16 10:30:28,035 - INFO - Avg. time per image: 3.540781 s
+2026-10-16 10:30:28,035 - INFO - Images per second (FPS): 0.28
+2026-10-16 10:30:28,035 - INFO - Avg. time per batch (excl. 1st): 3.541035 s
+2026-10-16 10:30:28,035 - INFO - Median time per batch (excl. 1st): 3.545201 s
+2026-10-16 10:31:14,706 - INFO - macaroni1 Results | I-AUROC: 0.9164 | I-AUPR: 0.9080 | P-AUROC: 0.9966 | AU-PRO: 0.9565 | I-F1: nan | P-F1: nan
+2026-10-16 10:31:14,706 - INFO - --- Processing Category: macaroni2 ---
+2026-10-16 10:31:14,706 - INFO - Initializing Augmentations
+2026-10-16 10:31:14,706 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 10:31:14,709 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 10:31:14,709 - INFO -   K-Shot image 1/2: 0461.JPG
+2026-10-16 10:31:14,709 - INFO -   K-Shot image 2/2: 0118.JPG
+2026-10-16 10:31:17,977 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 10:31:17,977 - INFO - Starting PCA fit on cuda...
+2026-10-16 10:31:17,977 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 10:34:54,374 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 10:38:33,023 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 10:38:33,255 - INFO - PCA: selected k=933 components to explain 99.00% of variance.
+2026-10-16 10:38:33,262 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 10:38:33,262 - INFO - Performing warm-up inference run...
+2026-10-16 10:38:36,820 - INFO - Warm-up complete.
+2026-10-16 10:38:36,820 - INFO - Evaluating on 200 test images...
+2026-10-16 10:38:40,046 - INFO - Number of test images: 200
+2026-10-16 10:50:56,734 - INFO - --- Timing Results for macaroni2 ---
+2026-10-16 10:50:56,735 - INFO - Total test images: 200
+2026-10-16 10:50:56,735 - INFO - Batch size: 1 (Processed 200 batches)
+2026-10-16 10:50:56,735 - INFO - Total inference time: 707.7437 s
+2026-10-16 10:50:56,735 - INFO - Avg. time per image: 3.538719 s
+2026-10-16 10:50:56,735 - INFO - Images per second (FPS): 0.28
+2026-10-16 10:50:56,735 - INFO - Avg. time per batch (excl. 1st): 3.539048 s
+2026-10-16 10:50:56,735 - INFO - Median time per batch (excl. 1st): 3.546727 s
+2026-10-16 10:51:42,504 - INFO - macaroni2 Results | I-AUROC: 0.8309 | I-AUPR: 0.8079 | P-AUROC: 0.9977 | AU-PRO: 0.9758 | I-F1: nan | P-F1: nan
+2026-10-16 10:51:42,505 - INFO - --- Processing Category: pcb1 ---
+2026-10-16 10:51:42,505 - INFO - Initializing Augmentations
+2026-10-16 10:51:42,505 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 10:51:42,507 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 10:51:42,508 - INFO -   K-Shot image 1/2: 0860.JPG
+2026-10-16 10:51:42,508 - INFO -   K-Shot image 2/2: 0722.JPG
+2026-10-16 10:51:45,775 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 10:51:45,775 - INFO - Starting PCA fit on cuda...
+2026-10-16 10:51:45,775 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 10:55:22,400 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 10:59:00,833 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 10:59:01,067 - INFO - PCA: selected k=1013 components to explain 99.00% of variance.
+2026-10-16 10:59:01,084 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 10:59:01,084 - INFO - Performing warm-up inference run...
+2026-10-16 10:59:04,618 - INFO - Warm-up complete.
+2026-10-16 10:59:04,618 - INFO - Evaluating on 200 test images...
+2026-10-16 10:59:07,918 - INFO - Number of test images: 200
+2026-10-16 11:11:26,349 - INFO - --- Timing Results for pcb1 ---
+2026-10-16 11:11:26,349 - INFO - Total test images: 200
+2026-10-16 11:11:26,349 - INFO - Batch size: 1 (Processed 200 batches)
+2026-10-16 11:11:26,349 - INFO - Total inference time: 709.0983 s
+2026-10-16 11:11:26,349 - INFO - Avg. time per image: 3.545491 s
+2026-10-16 11:11:26,349 - INFO - Images per second (FPS): 0.28
+2026-10-16 11:11:26,349 - INFO - Avg. time per batch (excl. 1st): 3.546118 s
+2026-10-16 11:11:26,349 - INFO - Median time per batch (excl. 1st): 3.546565 s
+2026-10-16 11:12:12,223 - INFO - pcb1 Results | I-AUROC: 0.9113 | I-AUPR: 0.9016 | P-AUROC: 0.9931 | AU-PRO: 0.9476 | I-F1: nan | P-F1: nan
+2026-10-16 11:12:12,223 - INFO - --- Processing Category: pcb2 ---
+2026-10-16 11:12:12,224 - INFO - Initializing Augmentations
+2026-10-16 11:12:12,224 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 11:12:12,226 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 11:12:12,227 - INFO -   K-Shot image 1/2: 0284.JPG
+2026-10-16 11:12:12,227 - INFO -   K-Shot image 2/2: 0138.JPG
+2026-10-16 11:12:15,489 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 11:12:15,489 - INFO - Starting PCA fit on cuda...
+2026-10-16 11:12:15,489 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 11:15:51,641 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 11:19:30,845 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 11:19:31,078 - INFO - PCA: selected k=1029 components to explain 99.00% of variance.
+2026-10-16 11:19:31,085 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 11:19:31,086 - INFO - Performing warm-up inference run...
+2026-10-16 11:19:34,649 - INFO - Warm-up complete.
+2026-10-16 11:19:34,649 - INFO - Evaluating on 200 test images...
+2026-10-16 11:19:37,883 - INFO - Number of test images: 200
+2026-10-16 11:31:55,274 - INFO - --- Timing Results for pcb2 ---
+2026-10-16 11:31:55,274 - INFO - Total test images: 200
+2026-10-16 11:31:55,274 - INFO - Batch size: 1 (Processed 200 batches)
+2026-10-16 11:31:55,275 - INFO - Total inference time: 708.0638 s
+2026-10-16 11:31:55,275 - INFO - Avg. time per image: 3.540319 s
+2026-10-16 11:31:55,275 - INFO - Images per second (FPS): 0.28
+2026-10-16 11:31:55,275 - INFO - Avg. time per batch (excl. 1st): 3.540637 s
+2026-10-16 11:31:55,275 - INFO - Median time per batch (excl. 1st): 3.539434 s
+2026-10-16 11:32:41,295 - INFO - pcb2 Results | I-AUROC: 0.8910 | I-AUPR: 0.8502 | P-AUROC: 0.9701 | AU-PRO: 0.9181 | I-F1: nan | P-F1: nan
+2026-10-16 11:32:41,295 - INFO - --- Processing Category: pcb3 ---
+2026-10-16 11:32:41,295 - INFO - Initializing Augmentations
+2026-10-16 11:32:41,295 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 11:32:41,298 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 11:32:41,298 - INFO -   K-Shot image 1/2: 0226.JPG
+2026-10-16 11:32:41,298 - INFO -   K-Shot image 2/2: 0573.JPG
+2026-10-16 11:32:44,565 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 11:32:44,565 - INFO - Starting PCA fit on cuda...
+2026-10-16 11:32:44,565 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 11:36:21,294 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 11:40:00,584 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 11:40:00,822 - INFO - PCA: selected k=1008 components to explain 99.00% of variance.
+2026-10-16 11:40:00,829 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 11:40:00,829 - INFO - Performing warm-up inference run...
+2026-10-16 11:40:04,396 - INFO - Warm-up complete.
+2026-10-16 11:40:04,397 - INFO - Evaluating on 201 test images...
+2026-10-16 11:40:07,640 - INFO - Number of test images: 201
+2026-10-16 11:52:28,383 - INFO - --- Timing Results for pcb3 ---
+2026-10-16 11:52:28,383 - INFO - Total test images: 201
+2026-10-16 11:52:28,383 - INFO - Batch size: 1 (Processed 201 batches)
+2026-10-16 11:52:28,384 - INFO - Total inference time: 711.5664 s
+2026-10-16 11:52:28,384 - INFO - Avg. time per image: 3.540131 s
+2026-10-16 11:52:28,384 - INFO - Images per second (FPS): 0.28
+2026-10-16 11:52:28,384 - INFO - Avg. time per batch (excl. 1st): 3.540488 s
+2026-10-16 11:52:28,384 - INFO - Median time per batch (excl. 1st): 3.543946 s
+2026-10-16 11:53:14,785 - INFO - pcb3 Results | I-AUROC: 0.9248 | I-AUPR: 0.9228 | P-AUROC: 0.9520 | AU-PRO: 0.9182 | I-F1: nan | P-F1: nan
+2026-10-16 11:53:14,785 - INFO - --- Processing Category: pcb4 ---
+2026-10-16 11:53:14,786 - INFO - Initializing Augmentations
+2026-10-16 11:53:14,786 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 11:53:14,788 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 11:53:14,789 - INFO -   K-Shot image 1/2: 0184.JPG
+2026-10-16 11:53:14,789 - INFO -   K-Shot image 2/2: 0947.JPG
+2026-10-16 11:53:18,063 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 11:53:18,063 - INFO - Starting PCA fit on cuda...
+2026-10-16 11:53:18,063 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 11:56:54,586 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 12:00:33,735 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 12:00:33,994 - INFO - PCA: selected k=1020 components to explain 99.00% of variance.
+2026-10-16 12:00:34,001 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 12:00:34,002 - INFO - Performing warm-up inference run...
+2026-10-16 12:00:37,577 - INFO - Warm-up complete.
+2026-10-16 12:00:37,578 - INFO - Evaluating on 201 test images...
+2026-10-16 12:00:40,841 - INFO - Number of test images: 201
+2026-10-16 12:13:02,076 - INFO - --- Timing Results for pcb4 ---
+2026-10-16 12:13:02,076 - INFO - Total test images: 201
+2026-10-16 12:13:02,077 - INFO - Batch size: 1 (Processed 201 batches)
+2026-10-16 12:13:02,077 - INFO - Total inference time: 711.9585 s
+2026-10-16 12:13:02,077 - INFO - Avg. time per image: 3.542082 s
+2026-10-16 12:13:02,077 - INFO - Images per second (FPS): 0.28
+2026-10-16 12:13:02,077 - INFO - Avg. time per batch (excl. 1st): 3.542511 s
+2026-10-16 12:13:02,077 - INFO - Median time per batch (excl. 1st): 3.547880 s
+2026-10-16 12:13:48,637 - INFO - pcb4 Results | I-AUROC: 0.9810 | I-AUPR: 0.9767 | P-AUROC: 0.9666 | AU-PRO: 0.9217 | I-F1: nan | P-F1: nan
+2026-10-16 12:13:48,637 - INFO - --- Processing Category: pipe_fryum ---
+2026-10-16 12:13:48,638 - INFO - Initializing Augmentations
+2026-10-16 12:13:48,638 - INFO - Added augmentation: RandomRotation(degrees=(0, 345))
+2026-10-16 12:13:48,640 - INFO - --- K-SHOT: Randomly sampling 2 training images ---
+2026-10-16 12:13:48,640 - INFO -   K-Shot image 1/2: 370.JPG
+2026-10-16 12:13:48,640 - INFO -   K-Shot image 2/2: 092.JPG
+2026-10-16 12:13:51,910 - INFO - Feature dim: 1536, Tokens per image: 2304, Base train images: 2, Total train images (w/ aug): 62, Total train tokens: 142848
+2026-10-16 12:13:51,910 - INFO - Starting PCA fit on cuda...
+2026-10-16 12:13:51,910 - INFO - Starting PCA Pass 1/2 (Mean)...
+2026-10-16 12:17:28,340 - INFO - Starting PCA Pass 2/2 (Covariance)...
+2026-10-16 12:21:06,862 - INFO - Performing eigendecomposition on GPU...
+2026-10-16 12:21:07,097 - INFO - PCA: selected k=927 components to explain 99.00% of variance.
+2026-10-16 12:21:07,103 - WARNING - No validation set found. F1 scores will be N/A.
+2026-10-16 12:21:07,104 - INFO - Performing warm-up inference run...
+2026-10-16 12:21:10,634 - INFO - Warm-up complete.
+2026-10-16 12:21:10,635 - INFO - Evaluating on 150 test images...
+2026-10-16 12:21:13,960 - INFO - Number of test images: 150
+2026-10-16 12:30:26,452 - INFO - --- Timing Results for pipe_fryum ---
+2026-10-16 12:30:26,452 - INFO - Total test images: 150
+2026-10-16 12:30:26,452 - INFO - Batch size: 1 (Processed 150 batches)
+2026-10-16 12:30:26,452 - INFO - Total inference time: 530.6820 s
+2026-10-16 12:30:26,452 - INFO - Avg. time per image: 3.537880 s
+2026-10-16 12:30:26,453 - INFO - Images per second (FPS): 0.28
+2026-10-16 12:30:26,453 - INFO - Avg. time per batch (excl. 1st): 3.538427 s
+2026-10-16 12:30:26,453 - INFO - Median time per batch (excl. 1st): 3.539874 s
+2026-10-16 12:31:00,495 - INFO - pipe_fryum Results | I-AUROC: 0.9704 | I-AUPR: 0.9815 | P-AUROC: 0.9896 | AU-PRO: 0.9835 | I-F1: nan | P-F1: nan
+2026-10-16 12:31:00,498 - INFO - 
+--- Benchmark Final Results ---
+2026-10-16 12:31:00,502 - INFO - 
+  Category    Seed  Image AUROC  Image AUPR  Pixel AUROC  AU-PRO  Image F1  Pixel F1
+    candle 42.0000       0.9322      0.9244       0.9940  0.9824       N/A       N/A
+  capsules 42.0000       0.9695      0.9817       0.9862  0.9726       N/A       N/A
+    cashew 42.0000       0.9906      0.9951       0.9912  0.9872       N/A       N/A
+chewinggum 42.0000       0.9914      0.9955       0.9965  0.9624       N/A       N/A
+     fryum 42.0000       0.9782      0.9909       0.9692  0.9591       N/A       N/A
+ macaroni1 42.0000       0.9164      0.9080       0.9966  0.9565       N/A       N/A
+ macaroni2 42.0000       0.8309      0.8079       0.9977  0.9758       N/A       N/A
+      pcb1 42.0000       0.9113      0.9016       0.9931  0.9476       N/A       N/A
+      pcb2 42.0000       0.8910      0.8502       0.9701  0.9181       N/A       N/A
+      pcb3 42.0000       0.9248      0.9228       0.9520  0.9182       N/A       N/A
+      pcb4 42.0000       0.9810      0.9767       0.9666  0.9217       N/A       N/A
+pipe_fryum 42.0000       0.9704      0.9815       0.9896  0.9835       N/A       N/A
+   Average 42.0000       0.9406      0.9364       0.9836  0.9571       N/A       N/A
+2026-10-16 12:31:01,982 - INFO - 
+Results saved to /kaggle/working/results/visa_k2_dinov2G/visa_mean_layers-12-13-14-15-16-17-18_res672_docrop0_score-reconstruction_clahe0_dropk0_model-dinov2-with-registers-giantpca_ev0.99_i-scoremtop1p_k2_aug30xr_seed42/benchmark_results.csv

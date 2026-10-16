@@ -29,3 +29,13 @@ DINOv2 forward pass at 672 px: base 4.0 s, giant 42 s per image (CPU), so the pa
 
 Reproduce: `bash scripts/get_visa.sh && bash scripts/smoke_visa.sh` (or the manual GitHub Actions workflow `smoke-visa`).
 Known quirks handled in `scripts/compat/`: NumPy 2 (`np.trapz`), AnomalyDINO hardcoding `cuda`.
+
+## Paper setting (DINOv2-with-registers-giant, 672 px, seed 42), VisA, SubspaceAD
+
+| Shots | Image AUROC (paper) | Image AUROC (ours) | Pixel AUROC (ours) | AU-PRO (ours) |
+|---|---|---|---|---|
+| 1 | 93.2 | 93.0 | 98.3 | 95.4 |
+| 2 | 93.8 | 94.1 | 98.4 | 95.7 |
+| 4 | 94.7 | running | | |
+
+Run on a Kaggle T4. Only the saliency layer's attention map is kept (`scripts/compat/sitecustomize.py`) to fit memory; scores are unaffected.
