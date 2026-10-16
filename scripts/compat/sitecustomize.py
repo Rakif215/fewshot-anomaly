@@ -34,5 +34,14 @@ if torch is not None and not torch.cuda.is_available():
             kwargs["device"] = _cpu(kwargs["device"])
         return _orig_to(self, *args, **kwargs)
 
+    _orig_tensor_to = torch.Tensor.to
+
+    def _tensor_to(self, *args, **kwargs):
+        args = tuple(_cpu(a) for a in args)
+        if "device" in kwargs:
+            kwargs["device"] = _cpu(kwargs["device"])
+        return _orig_tensor_to(self, *args, **kwargs)
+
     torch.nn.Module.to = _module_to
+    torch.Tensor.to = _tensor_to
     torch.cuda.synchronize = lambda *a, **k: None
