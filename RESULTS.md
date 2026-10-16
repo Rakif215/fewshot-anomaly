@@ -36,6 +36,6 @@ Known quirks handled in `scripts/compat/`: NumPy 2 (`np.trapz`), AnomalyDINO har
 |---|---|---|---|---|
 | 1 | 93.2 | 93.0 | 98.3 | 95.4 |
 | 2 | 93.8 | 94.1 | 98.4 | 95.7 |
-| 4 | 94.7 | running | | |
+| 4 | 94.7 | **94.7** | 98.5 | 96.0 |
 
 Run on a Kaggle T4. Only the saliency layer's attention map is kept (`scripts/compat/sitecustomize.py`) to fit memory; scores are unaffected.
