@@ -16,7 +16,7 @@ sh("nvidia-smi --query-gpu=name,memory.total --format=csv")
 sh("pip install -q -r requirements.txt")                    # torch is already installed (with CUDA) on Kaggle
 sh("pip install -q -e third_party/SubspaceAD --no-deps")
 sh("bash scripts/get_visa.sh")
-env = dict(os.environ, PYTHONPATH=f"{REPO}/scripts/compat:" + os.environ.get("PYTHONPATH", ""))
+env = dict(os.environ, SUBSPACEAD_KEEP_ATTN_LAYER="6", PYTHONPATH=f"{REPO}/scripts/compat:" + os.environ.get("PYTHONPATH", ""))
 DATA = f"{REPO}/datasets/VisA_pytorch/1cls"
 for k in (1, 2, 4):
     t = time.time()
