@@ -1,0 +1,41 @@
+name: smoke-visa
+# Manual run: both methods (or one) on VisA, 1-shot, small DINOv2, CPU. Results are uploaded as an artifact.
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "Which method: subspacead, anomalydino, or leave empty for both"
+        required: false
+        default: ""
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Setup
+        run: bash scripts/setup.sh
+      - name: Download VisA
+        run: bash scripts/get_visa.sh
+      - name: Smoke test
+        env:
+          ONLY: ${{ inputs.only }}
+        run: bash scripts/smoke_visa.sh
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Results" >> "$GITHUB_STEP_SUMMARY"
+          for f in results/smoke_visa_1shot_vits/*.log; do
+            echo "#### $f" >> "$GITHUB_STEP_SUMMARY"
+            grep -A 20 -E "Benchmark Final Results|Average|AUROC" "$f" | tail -n 25 >> "$GITHUB_STEP_SUMMARY" || true
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-results
+          path: results/
