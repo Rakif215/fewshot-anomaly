@@ -18,7 +18,7 @@ Datasets and results stay in the Codespace (`datasets/`, `results/` are git-igno
 
 ## Status
 
-- [ ] Smoke test (small backbone) — pipeline runs, numbers sensible
+- [x] Smoke test (small backbone), both methods, 12 VisA categories: see [RESULTS.md](RESULTS.md) (SubspaceAD 88.5 vs AnomalyDINO 86.4 average image AUROC)
 - [ ] Reproduction at paper settings (giant backbone, 672 px) on VisA and MVTec-AD
 - [ ] Analysis: where PCA beats nearest-neighbour and why; speed/memory; MVTec AD 2 public split
 
