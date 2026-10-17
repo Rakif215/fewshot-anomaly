@@ -8,7 +8,7 @@ def sh(cmd, **kw):
 T0 = time.time()
 REPO, OUT = "/kaggle/tmp/repo", "/kaggle/working/results"
 os.makedirs(OUT, exist_ok=True)
-sh(f"git clone -q https://github.com/Rakif215/fewshot-anomaly.git {REPO}")
+sh(f"git clone --recursive -q https://github.com/Rakif215/fewshot-anomaly.git {REPO}")
 os.chdir(REPO)
 sh("pip install -q scikit-learn scipy pillow")
 sh("bash scripts/get_visa.sh")
