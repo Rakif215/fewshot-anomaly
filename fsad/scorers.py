@@ -26,9 +26,11 @@ def knn_scorer(train: np.ndarray, k: int = 1):
     bank = torch.from_numpy(train).float()
 
     def score(x):
-        q = torch.from_numpy(x).float()
-        d = torch.cdist(q, bank)
-        return d.topk(k, largest=False).values.mean(1).numpy()
+        out = []
+        for i in range(0, len(x), 4096):  # chunk the queries: a full distance matrix does not fit in RAM
+            q = torch.from_numpy(x[i:i + 4096]).float()
+            out.append(torch.cdist(q, bank).topk(k, largest=False).values.mean(1).numpy())
+        return np.concatenate(out)
 
     return score
 
