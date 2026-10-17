@@ -39,3 +39,18 @@ Known quirks handled in `scripts/compat/`: NumPy 2 (`np.trapz`), AnomalyDINO har
 | 4 | 94.7 | **94.7** | 98.5 | 96.0 |
 
 Run on a Kaggle T4. Only the saliency layer's attention map is kept (`scripts/compat/sitecustomize.py`) to fit memory; scores are unaffected.
+
+## Improvement experiment: PCA residual + nearest-neighbour fusion (small backbone, 448 px, 4-shot, VisA)
+
+Own compact implementation (`fsad/`): 6 flip/rotation augmentations per shot, mean of layers -4/-5, image score = mean of top 1% patch scores.
+Variants were compared on 4 tuning categories (candle, capsules, macaroni1, pcb1); the chosen variant is reported on the 8 held-out categories.
+Scores are rescaled per category from the test-patch score distribution (no labels used).
+
+| Variant | Tuning image AUROC | Held-out image AUROC | Held-out pixel AUROC |
+|---|---|---|---|
+| PCA residual (99% variance) | 91.6 | 88.5 | 95.6 |
+| Nearest neighbour (k=1) | 90.9 | 89.4 | 94.5 |
+| **Fusion PCA 99% + kNN 1** | **92.3** | **89.8** | **95.6** |
+
+Fusion is +1.3 over PCA alone and +0.4 over kNN alone on held-out categories. Raw numbers: `results_exp/small_k4.json`.
+Caveats: single seed, small model, simplified augmentation; not yet confirmed with the giant backbone.
