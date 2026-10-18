@@ -22,6 +22,8 @@ for cat, label in CATS:
     sg = np.array([det.score(Image.open(p).convert("RGB"))["score"] for p in good])
     sb = np.array([det.score(Image.open(p).convert("RGB"))["score"] for p in bad])
     thr = det.threshold
+    base = thr / 1.0   # threshold = highest leave-one-out score of a held-out normal reference (margin 1.0)
+    print(cat, "for information, other margins:", {m: (round(float(np.mean(sb > base * m)), 2), round(float(np.mean(sg > base * m)), 2)) for m in (0.8, 0.9, 1.0, 1.2)}, "(caught, false alarms)", flush=True)
     auc = roc_auc_score([0] * len(sg) + [1] * len(sb), np.r_[sg, sb])
     caught = np.where(sb > thr)[0]; caught = caught[np.argsort(sb[caught])]
     missed = np.where(sb <= thr)[0]; missed = missed[np.argsort(-sb[missed])]

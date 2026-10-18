@@ -43,7 +43,7 @@ class FewShotDetector:
     def _raw_with(scorers, flat):
         return np.stack([scorers[0](flat), scorers[1](flat)], axis=1)
 
-    def fit(self, images: list[Image.Image], margin: float = 1.2) -> "FewShotDetector":
+    def fit(self, images: list[Image.Image], margin: float = 1.0) -> "FewShotDetector":
         """Learn "normal" from the reference images and calibrate the decision threshold by leave-one-out:
         every reference image is scored by a model built from the OTHER references, so the scale and the
         threshold reflect how normal images that were not seen actually score."""

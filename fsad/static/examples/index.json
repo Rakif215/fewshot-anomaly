@@ -9,13 +9,24 @@
    ],
    [
     "test_defect1",
-    "Defective part 1"
+    "Defective part"
    ],
    [
     "test_defect2",
-    "Defective part 2"
+    "Defective part"
+   ],
+   [
+    "test_subtle",
+    "Subtle defect (often missed)"
    ]
-  ]
+  ],
+  "stats": {
+   "auroc": 0.891,
+   "defects_caught": 0.08,
+   "good_flagged": 0.01,
+   "n_good": 101,
+   "n_defect": 100
+  }
  },
  "macaroni1": {
   "label": "Macaroni",
@@ -27,13 +38,24 @@
    ],
    [
     "test_defect1",
-    "Defective part 1"
+    "Defective part"
    ],
    [
     "test_defect2",
-    "Defective part 2"
+    "Defective part"
+   ],
+   [
+    "test_subtle",
+    "Subtle defect (often missed)"
    ]
-  ]
+  ],
+  "stats": {
+   "auroc": 0.939,
+   "defects_caught": 0.41,
+   "good_flagged": 0.02,
+   "n_good": 100,
+   "n_defect": 100
+  }
  },
  "capsules": {
   "label": "Capsules",
@@ -45,12 +67,23 @@
    ],
    [
     "test_defect1",
-    "Defective part 1"
+    "Defective part"
    ],
    [
     "test_defect2",
-    "Defective part 2"
+    "Defective part"
+   ],
+   [
+    "test_subtle",
+    "Subtle defect (often missed)"
    ]
-  ]
+  ],
+  "stats": {
+   "auroc": 0.947,
+   "defects_caught": 0.44,
+   "good_flagged": 0.0,
+   "n_good": 60,
+   "n_defect": 100
+  }
  }
 }
