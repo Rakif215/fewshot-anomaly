@@ -1,6 +1,6 @@
 {
- "pcb4": {
-  "label": "Circuit board",
+ "capsules": {
+  "label": "Capsules",
   "refs": 4,
   "tests": [
    [
@@ -21,10 +21,10 @@
    ]
   ],
   "stats": {
-   "auroc": 0.889,
-   "defects_caught": 0.05,
-   "good_flagged": 0.02,
-   "n_good": 101,
+   "auroc": 0.95,
+   "defects_caught": 0.73,
+   "good_flagged": 0.05,
+   "n_good": 60,
    "n_defect": 100
   }
  },
@@ -57,8 +57,8 @@
    "n_defect": 100
   }
  },
- "capsules": {
-  "label": "Capsules",
+ "pcb4": {
+  "label": "Circuit board",
   "refs": 4,
   "tests": [
    [
@@ -79,10 +79,10 @@
    ]
   ],
   "stats": {
-   "auroc": 0.95,
-   "defects_caught": 0.73,
-   "good_flagged": 0.05,
-   "n_good": 60,
+   "auroc": 0.889,
+   "defects_caught": 0.05,
+   "good_flagged": 0.02,
+   "n_good": 101,
    "n_defect": 100
   }
  }
