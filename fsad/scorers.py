@@ -2,19 +2,20 @@
 import numpy as np
 
 
-def pca_scorer(train: np.ndarray, ev: float = 0.99, whiten: bool = False):
-    mu = train.mean(0)
-    u, s, vt = np.linalg.svd(train - mu, full_matrices=False)
-    var = s**2 / (s**2).sum()
-    k = int(np.searchsorted(np.cumsum(var), ev) + 1)
-    comps = vt[:k]
-    scale = (s[:k] / np.sqrt(len(train))) if whiten else None
+def pca_scorer(train: np.ndarray, ev: float = 0.99):
+    """Residual of the projection onto the principal subspace that explains `ev` of the variance."""
+    x = train.astype(np.float32)
+    mu = x.mean(0)
+    xc = x - mu
+    cov = (xc.T @ xc) / max(len(xc) - 1, 1)
+    vals, vecs = np.linalg.eigh(cov.astype(np.float64))
+    order = np.argsort(vals)[::-1]
+    vals, vecs = np.clip(vals[order], 0, None), vecs[:, order]
+    k = int(np.searchsorted(np.cumsum(vals) / vals.sum(), ev) + 1)
+    comps = vecs[:, :k].T.astype(np.float32)
 
-    def score(x):
-        z = x - mu
-        proj = z @ comps.T
-        if whiten:
-            proj = proj / (scale + 1e-6)  # unused in the residual; kept for Mahalanobis-style variants
+    def score(x_new):
+        z = x_new.astype(np.float32) - mu
         res = z - (z @ comps.T) @ comps
         return np.linalg.norm(res, axis=1)
 
@@ -22,14 +23,17 @@ def pca_scorer(train: np.ndarray, ev: float = 0.99, whiten: bool = False):
 
 
 def knn_scorer(train: np.ndarray, k: int = 1):
+    """Mean distance to the k nearest normal patches. Uses the GPU when there is one."""
     import torch
-    bank = torch.from_numpy(train).float()
+    dev = "cuda" if torch.cuda.is_available() else "cpu"
+    bank = torch.from_numpy(train).float().to(dev)
+    chunk = 2048 if dev == "cuda" else 4096
 
     def score(x):
         out = []
-        for i in range(0, len(x), 4096):  # chunk the queries: a full distance matrix does not fit in RAM
-            q = torch.from_numpy(x[i:i + 4096]).float()
-            out.append(torch.cdist(q, bank).topk(k, largest=False).values.mean(1).numpy())
+        for i in range(0, len(x), chunk):  # chunk the queries: a full distance matrix does not fit in memory
+            q = torch.from_numpy(x[i:i + chunk]).float().to(dev)
+            out.append(torch.cdist(q, bank).topk(k, largest=False).values.mean(1).cpu().numpy())
         return np.concatenate(out)
 
     return score
