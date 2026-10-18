@@ -41,11 +41,11 @@ def learn(images: list[Image.Image]) -> dict:
 
 
 @gpu
-def inspect(model: dict, image: Image.Image):
-    """Return (verdict markdown, overlay image, score text)."""
+def inspect(model: dict, image: Image.Image, sensitivity: float = 1.0):
+    """Return (verdict markdown, overlay image, score text). sensitivity < 1 lowers the threshold (more alerts)."""
     det = FewShotDetector.from_state(model["state"], extractor())
     out = det.score(image, out_size=min(image.size[0], 512))
-    limit = model["threshold"]
+    limit = model["threshold"] * sensitivity
     defect = out["score"] > limit
     verdict = f"## {'🔴 Defect likely' if defect else '🟢 Looks good'}"
     info = f"score **{out['score']:.2f}**, threshold **{limit:.2f}**"
@@ -69,17 +69,21 @@ def build():
             cat = labels[label]
             refs, tests = example_images(cat)
             model = learn(refs)
-            return model, [t[0] for t in tests], [(r, "reference (good)") for r in refs], f"Learned from {len(refs)} good photos. Now click a test photo below."
+            st = example_meta()[cat].get("stats")
+            facts = (f" On all {st['n_good']} good and {st['n_defect']} defective test photos of this part: image AUROC **{st['auroc']:.2f}**, "
+                     f"**{st['defects_caught']:.0%}** of defects caught, **{st['good_flagged']:.0%}** of good parts falsely flagged. "
+                     "The photos below were picked to show typical cases, including one miss.") if st else ""
+            return model, [t[0] for t in tests], [(r, "reference (good)") for r in refs], f"Learned from {len(refs)} good photos." + facts + " Click a test photo below."
         except gr.Error:
             raise
         except Exception as e:
             raise gr.Error(f"{type(e).__name__}: {e}")
 
-    def pick_test(model, paths, evt: gr.SelectData):
+    def pick_test(model, paths, sens, evt: gr.SelectData):
         if model is None:
             raise gr.Error("Choose an example part first.")
         try:
-            return inspect(model, Image.open(paths[evt.index]).convert("RGB"))
+            return inspect(model, Image.open(paths[evt.index]).convert("RGB"), sens)
         except gr.Error:
             raise
         except Exception as e:
@@ -94,13 +98,13 @@ def build():
         except Exception as e:
             raise gr.Error(f"{type(e).__name__}: {e}")
 
-    def inspect_upload(model, img):
+    def inspect_upload(model, img, sens):
         if model is None:
             raise gr.Error("Learn from your good photos first.")
         if img is None:
             raise gr.Error("Upload a photo to inspect.")
         try:
-            return inspect(model, img.convert("RGB"))
+            return inspect(model, img.convert("RGB"), sens)
         except Exception as e:
             raise gr.Error(f"{type(e).__name__}: {e}")
 
@@ -111,6 +115,7 @@ def build():
             choice = gr.Radio(list(labels), label="Example part (VisA dataset, CC BY 4.0)")
             status = gr.Markdown()
             refs_g = gr.Gallery(label="Good reference photos", columns=4, height=140, interactive=False)
+            sens1 = gr.Slider(0.7, 1.5, value=1.0, step=0.05, label="Sensitivity: lower = more alerts (and more false alarms)")
             tests_g = gr.Gallery(label="Test photos (click one)", columns=3, height=200, allow_preview=False)
             model_state, paths_state = gr.State(None), gr.State([])
             with gr.Row():
@@ -118,21 +123,22 @@ def build():
             info = gr.Markdown()
             choice.change(pick_example, choice, [model_state, paths_state, refs_g, status]).then(
                 lambda p: [(x, None) for x in p], paths_state, tests_g)
-            tests_g.select(pick_test, [model_state, paths_state], [verdict, overlay_img, info])
+            tests_g.select(pick_test, [model_state, paths_state, sens1], [verdict, overlay_img, info])
         with gr.Tab("Use your own photos"):
             files = gr.File(file_count="multiple", file_types=["image"], label="1-8 photos of a good part")
             learn_btn = gr.Button("Learn this part")
             status2 = gr.Markdown()
             my_model = gr.State(None)
+            sens2 = gr.Slider(0.7, 1.5, value=1.0, step=0.05, label="Sensitivity: lower = more alerts (and more false alarms)")
             test_img = gr.Image(type="pil", label="Photo to inspect")
             go = gr.Button("Inspect")
             with gr.Row():
                 v2, o2 = gr.Markdown(), gr.Image(label="Where the model looks", type="pil")
             i2 = gr.Markdown()
             learn_btn.click(learn_upload, files, [my_model, status2])
-            go.click(inspect_upload, [my_model, test_img], [v2, o2, i2])
+            go.click(inspect_upload, [my_model, test_img, sens2], [v2, o2, i2])
         gr.Markdown("**Method:** frozen DINOv2 features; a PCA-residual score and a nearest-neighbour score fused. "
                     "Paper reproduction on VisA (image AUROC, 1/2/4-shot): 93.0 / 94.1 / 94.7 vs the paper's 93.2 / 93.8 / 94.7. "
                     "[Code and results](https://github.com/Rakif215/fewshot-anomaly) · [SubspaceAD paper](https://arxiv.org/abs/2602.23013). "
-                    "Uploaded images are processed in memory and not stored.")
+                    "Results depend on which good photos you show: 4 well-chosen references work better than 1. Uploaded images are processed in memory and not stored.")
     return demo

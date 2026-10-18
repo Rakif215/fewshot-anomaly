@@ -41,16 +41,14 @@ def test_ui_builds_without_gradio_warnings():
         demo.build()
 
 
-def test_good_images_pass_and_defects_are_flagged_on_every_example_set():
-    """The decision threshold must separate real good and defective photos, not only rank them."""
-    meta = demo.example_meta()
-    results = {}
-    for cat in meta:
+def test_example_photos_behave_as_labelled_on_every_example_set():
+    """Good example below the threshold, both 'defective' examples above it; stats are present and consistent."""
+    for cat, m in demo.example_meta().items():
         refs, tests = demo.example_images(cat)
         model = demo.learn(refs)
-        scores = {Path(p).stem: float(demo.inspect(model, Image.open(p).convert("RGB"))[2].split("**")[1]) for p, _ in tests}
-        results[cat] = (scores, model["threshold"])
-    print(results)
-    for cat, (sc, thr) in results.items():
-        assert sc["test_good"] < thr, (cat, sc, thr)
-        assert max(sc["test_defect1"], sc["test_defect2"]) > thr, (cat, sc, thr)
+        sc = {Path(p).stem: float(demo.inspect(model, Image.open(p).convert("RGB"))[2].split("**")[1]) for p, _ in tests}
+        thr = model["threshold"]
+        assert sc["test_good"] <= thr, (cat, sc, thr)
+        assert sc["test_defect1"] > thr and sc["test_defect2"] > thr, (cat, sc, thr)
+        st = m["stats"]
+        assert 0.5 < st["auroc"] <= 1 and 0 <= st["good_flagged"] <= 1 and 0 <= st["defects_caught"] <= 1
