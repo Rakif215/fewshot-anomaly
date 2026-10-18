@@ -12,6 +12,7 @@ import uuid
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse, Response
+from fastapi.staticfiles import StaticFiles
 from PIL import Image, UnidentifiedImageError
 
 from .detector import FewShotDetector
@@ -22,6 +23,7 @@ RES = int(os.environ.get("FSAD_RES", "448"))
 MAX_REFERENCES, MAX_BYTES = 16, 15 * 1024 * 1024
 
 app = FastAPI(title="Few-shot anomaly inspection", version="0.1.0")
+app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static")), name="static")
 _models: dict[str, dict] = {}   # id -> {"detector", "threshold", "n"}
 
 

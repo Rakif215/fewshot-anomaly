@@ -2,43 +2,79 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Few-shot defect inspection</title>
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--ink:#14171c;--mute:#5d6673;--line:#dfe3e8;--ok:#16794c;--bad:#b3261e;--accent:#2457d6}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#171b21;--ink:#e8ebef;--mute:#9aa4b2;--line:#2a313b;--ok:#4cc38a;--bad:#ff7a70;--accent:#7aa2ff}}
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14171c;--mute:#5d6673;--line:#dfe3e8;--ok:#16794c;--bad:#b3261e;--accent:#2457d6;--track:#e7eaee}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#171b21;--ink:#e8ebef;--mute:#9aa4b2;--line:#2a313b;--ok:#4cc38a;--bad:#ff7a70;--accent:#7aa2ff;--track:#262d36}}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
-main{max-width:920px;margin:0 auto;padding:24px 16px 56px}
-h1{font-size:1.5rem;margin:0 0 4px}p.lead{color:var(--mute);margin:0 0 20px}
+main{max-width:940px;margin:0 auto;padding:24px 16px 56px}
+h1{font-size:1.6rem;margin:0 0 4px}h2{font-size:1.05rem;margin:0 0 8px}p.lead{color:var(--mute);margin:0 0 20px;max-width:62ch}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
-.step{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:6px}
-button,input[type=file]{font:inherit}button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+.step{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:8px}
+button,input[type=file]{font:inherit}
+button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+button.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}button.ghost.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
 button:disabled{opacity:.5;cursor:default}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.thumbs img{height:64px;border-radius:6px;border:1px solid var(--line)}
-.result{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:640px){.result{grid-template-columns:1fr}}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.thumbs img{height:72px;border-radius:6px;border:1px solid var(--line)}
+.thumbs img.pick{cursor:pointer;height:92px}.thumbs img.pick:hover{outline:2px solid var(--accent)}
+.result{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}@media(max-width:640px){.result{grid-template-columns:1fr}}
 .result img{width:100%;border-radius:8px;border:1px solid var(--line)}
-.verdict{font-size:1.25rem;font-weight:600}.ok{color:var(--ok)}.bad{color:var(--bad)}
-small{color:var(--mute)}
+.verdict{font-size:1.3rem;font-weight:650}.ok{color:var(--ok)}.bad{color:var(--bad)}
+.bar{position:relative;height:10px;background:var(--track);border-radius:6px;margin:8px 0 2px;max-width:420px}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:var(--ok)}.bar i.bad{background:var(--bad)}
+.bar b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+small,.muted{color:var(--mute)}table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line)}th{color:var(--mute);font-weight:500}
+a{color:var(--accent)}ol{margin:0;padding-left:20px}
 </style></head><body><main>
 <h1>Few-shot defect inspection</h1>
-<p class="lead">Show 1–8 photos of a good part. Then upload any photo of the same part and see whether it has a defect, and where.</p>
-<div class="card"><div class="step">Step 1 · reference photos (good parts)</div>
-<div class="row"><input id="refs" type="file" accept="image/*" multiple><button id="fit">Learn this part</button><span id="fitmsg"><small></small></span></div>
-<div class="thumbs" id="thumbs"></div></div>
-<div class="card"><div class="step">Step 2 · photo to inspect</div>
-<div class="row"><input id="test" type="file" accept="image/*"><button id="go" disabled>Inspect</button></div>
-<div id="out" style="margin-top:14px"></div></div>
-<small>No training happens: the model compares each image region with what it saw in the reference photos. Your images are processed in memory and not stored.</small>
+<p class="lead">Show the model a handful of photos of a good part. It then flags defects in new photos and shows where, with no training and no defect examples.</p>
+
+<div class="card"><div class="step">Try it in one click</div>
+<div class="row" id="examples"></div>
+<div class="thumbs" id="extests"></div></div>
+
+<div class="card"><div class="step">Or use your own photos</div>
+<div class="row"><input id="refs" type="file" accept="image/*" multiple><button id="fit">Learn this part</button><span id="fitmsg" class="muted"></span></div>
+<div class="row" style="margin-top:10px"><input id="test" type="file" accept="image/*"><button id="go" disabled>Inspect</button></div></div>
+
+<div class="card" id="outcard" hidden><div class="step">Result</div><div id="out"></div></div>
+
+<div class="card"><h2>How it works</h2>
+<ol><li>A frozen DINOv2 vision model turns every region of each photo into a feature vector.</li>
+<li>Features from your good photos define what "normal" looks like (a subspace, plus nearest neighbours).</li>
+<li>In a new photo, regions that don't fit that picture score high. The top regions give the verdict; the scores give the heatmap.</li></ol></div>
+
+<div class="card"><h2>Reproduction of the paper (VisA, image AUROC, giant model, 672 px)</h2>
+<table><tr><th>Shots</th><th>Paper</th><th>This reproduction</th></tr>
+<tr><td>1</td><td>93.2</td><td>93.0</td></tr><tr><td>2</td><td>93.8</td><td>94.1</td></tr><tr><td>4</td><td>94.7</td><td>94.7</td></tr></table>
+<p class="muted" style="margin:10px 0 0">Method: SubspaceAD (CVPR 2026) with an added nearest-neighbour score. The demo runs the small backbone so it answers quickly.</p></div>
+
+<p><small>Example images: VisA dataset (Amazon), CC BY 4.0. Images you upload are processed in memory and not stored.
+ <a href="https://github.com/Rakif215/fewshot-anomaly">Code and full results on GitHub</a> · <a href="https://arxiv.org/abs/2602.23013">SubspaceAD paper</a></small></p>
+
 <script>
 let modelId=null;const $=id=>document.getElementById(id);
-$('refs').onchange=e=>{$('thumbs').innerHTML='';[...e.target.files].forEach(f=>{const i=new Image();i.src=URL.createObjectURL(f);$('thumbs').append(i)})};
-$('fit').onclick=async()=>{const fs=$('refs').files;if(!fs.length)return;const fd=new FormData();[...fs].forEach(f=>fd.append('files',f));
- $('fit').disabled=true;$('fitmsg').textContent='Learning…';
- try{const r=await fetch('/models',{method:'POST',body:fd});const j=await r.json();if(!r.ok)throw new Error(j.detail||r.status);
-  modelId=j.model_id;$('fitmsg').textContent='Ready ('+j.references+' reference photos)';$('go').disabled=false}
- catch(e){$('fitmsg').textContent='Error: '+e.message}$('fit').disabled=false};
-$('go').onclick=async()=>{const f=$('test').files[0];if(!f||!modelId)return;const fd=new FormData();fd.append('file',f);
- $('go').disabled=true;$('out').textContent='Inspecting…';
- try{const r=await fetch('/models/'+modelId+'/inspect',{method:'POST',body:fd});const j=await r.json();if(!r.ok)throw new Error(j.detail||r.status);
-  $('out').innerHTML='<div class="verdict '+(j.defect?'bad':'ok')+'">'+(j.defect?'Defect likely':'Looks good')+'</div><small>score '+j.score.toFixed(2)+' · threshold '+j.threshold.toFixed(2)+'</small>'+
-  '<div class="result" style="margin-top:10px"><div><small>Your photo</small><img src="'+URL.createObjectURL(f)+'"></div><div><small>Where the model looks</small><img src="data:image/png;base64,'+j.overlay_png_base64+'"></div></div>'}
- catch(e){$('out').textContent='Error: '+e.message}$('go').disabled=false};
+function show(j,url){$('outcard').hidden=false;const pct=Math.min(100,j.score/(j.threshold*2)*100),t=50;
+ $('out').innerHTML='<div class="verdict '+(j.defect?'bad':'ok')+'">'+(j.defect?'Defect likely':'Looks good')+'</div>'+
+ '<div class="bar"><i class="'+(j.defect?'bad':'')+'" style="width:'+pct+'%"></i><b style="left:'+t+'%"></b></div>'+
+ '<small>score '+j.score.toFixed(2)+' · threshold '+j.threshold.toFixed(2)+' (marker)</small>'+
+ '<div class="result"><div><small>Photo</small><img src="'+url+'"></div><div><small>Where the model looks</small><img src="data:image/png;base64,'+j.overlay_png_base64+'"></div></div>';
+ $('outcard').scrollIntoView({behavior:'smooth',block:'nearest'})}
+async function inspect(blob,url){$('outcard').hidden=false;$('out').textContent='Inspecting…';const fd=new FormData();fd.append('file',blob,'img.jpg');
+ try{const r=await fetch('/models/'+modelId+'/inspect',{method:'POST',body:fd});const j=await r.json();if(!r.ok)throw new Error(j.detail||r.status);show(j,url)}catch(e){$('out').textContent='Error: '+e.message}}
+async function fit(files,msgEl){const fd=new FormData();files.forEach(f=>fd.append('files',f));msgEl.textContent='Learning…';
+ const r=await fetch('/models',{method:'POST',body:fd});const j=await r.json();if(!r.ok)throw new Error(j.detail||r.status);modelId=j.model_id;return j}
+$('fit').onclick=async()=>{const fs=[...$('refs').files];if(!fs.length)return;$('fit').disabled=true;
+ try{const j=await fit(fs,$('fitmsg'));$('fitmsg').textContent='Ready ('+j.references+' reference photos)';$('go').disabled=false}catch(e){$('fitmsg').textContent='Error: '+e.message}$('fit').disabled=false};
+$('go').onclick=()=>{const f=$('test').files[0];if(f&&modelId)inspect(f,URL.createObjectURL(f))};
+fetch('/static/examples/index.json').then(r=>r.json()).then(meta=>{
+ Object.entries(meta).forEach(([cat,m])=>{const b=document.createElement('button');b.className='ghost';b.textContent=m.label;
+  b.onclick=async()=>{document.querySelectorAll('#examples button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+   $('extests').innerHTML='<span class="muted">Learning from 4 good photos…</span>';$('outcard').hidden=true;
+   try{const blobs=await Promise.all([1,2,3,4].map(i=>fetch('/static/examples/'+cat+'/ref'+i+'.jpg').then(r=>r.blob())));
+    await fit(blobs.map((bl,i)=>new File([bl],'ref'+i+'.jpg')),$('fitmsg'));
+    $('extests').innerHTML='<span class="muted" style="width:100%">Reference photos learned. Click a photo to inspect it:</span>';
+    m.tests.forEach(([f,label])=>{const im=new Image();im.className='pick';im.title=label;im.src='/static/examples/'+cat+'/'+f+'.jpg';
+     im.onclick=async()=>{const bl=await fetch(im.src).then(r=>r.blob());inspect(bl,im.src)};$('extests').append(im)})}
+   catch(e){$('extests').textContent='Error: '+e.message}};$('examples').append(b)})});
 </script></main></body></html>

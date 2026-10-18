@@ -52,3 +52,13 @@ def test_errors():
 def test_demo_page_is_served():
     r = client.get("/")
     assert r.status_code == 200 and "Few-shot defect inspection" in r.text
+
+
+def test_example_images_are_served_and_work_end_to_end():
+    meta = client.get("/static/examples/index.json").json()
+    cat = next(iter(meta))
+    refs = [("files", (f"r{i}.jpg", client.get(f"/static/examples/{cat}/ref{i}.jpg").content, "image/jpeg")) for i in (1, 2, 3, 4)]
+    mid = client.post("/models", files=refs).json()["model_id"]
+    good = client.post(f"/models/{mid}/inspect", files={"file": ("g.jpg", client.get(f"/static/examples/{cat}/test_good.jpg").content, "image/jpeg")}).json()
+    bad = client.post(f"/models/{mid}/inspect", files={"file": ("b.jpg", client.get(f"/static/examples/{cat}/test_defect1.jpg").content, "image/jpeg")}).json()
+    assert bad["score"] > good["score"]

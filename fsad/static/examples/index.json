@@ -1,0 +1,56 @@
+{
+ "pcb4": {
+  "label": "Circuit board",
+  "refs": 4,
+  "tests": [
+   [
+    "test_good",
+    "Good part"
+   ],
+   [
+    "test_defect1",
+    "Defective part 1"
+   ],
+   [
+    "test_defect2",
+    "Defective part 2"
+   ]
+  ]
+ },
+ "macaroni1": {
+  "label": "Macaroni",
+  "refs": 4,
+  "tests": [
+   [
+    "test_good",
+    "Good part"
+   ],
+   [
+    "test_defect1",
+    "Defective part 1"
+   ],
+   [
+    "test_defect2",
+    "Defective part 2"
+   ]
+  ]
+ },
+ "capsules": {
+  "label": "Capsules",
+  "refs": 4,
+  "tests": [
+   [
+    "test_good",
+    "Good part"
+   ],
+   [
+    "test_defect1",
+    "Defective part 1"
+   ],
+   [
+    "test_defect2",
+    "Defective part 2"
+   ]
+  ]
+ }
+}
