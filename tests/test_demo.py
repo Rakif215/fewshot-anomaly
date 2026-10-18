@@ -1,4 +1,5 @@
 import pytest
+from pathlib import Path
 from PIL import Image
 
 pytest.importorskip("torch")
@@ -38,3 +39,18 @@ def test_ui_builds_without_gradio_warnings():
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         demo.build()
+
+
+def test_good_images_pass_and_defects_are_flagged_on_every_example_set():
+    """The decision threshold must separate real good and defective photos, not only rank them."""
+    meta = demo.example_meta()
+    results = {}
+    for cat in meta:
+        refs, tests = demo.example_images(cat)
+        model = demo.learn(refs)
+        scores = {Path(p).stem: float(demo.inspect(model, Image.open(p).convert("RGB"))[2].split("**")[1]) for p, _ in tests}
+        results[cat] = (scores, model["threshold"])
+    print(results)
+    for cat, (sc, thr) in results.items():
+        assert sc["test_good"] < thr, (cat, sc, thr)
+        assert max(sc["test_defect1"], sc["test_defect2"]) > thr, (cat, sc, thr)

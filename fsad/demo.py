@@ -37,7 +37,7 @@ def example_meta() -> dict:
 def learn(images: list[Image.Image]) -> dict:
     """Fit on the reference photos. Returns plain data only (no functions), because ZeroGPU pickles what crosses the call."""
     det = FewShotDetector(CKPT, RES, extractor=extractor()).fit(images)
-    return {"state": det.state(), "threshold": det.threshold_hint(images), "n": len(images)}
+    return {"state": det.state(), "threshold": det.threshold, "n": len(images)}
 
 
 @gpu

@@ -54,7 +54,7 @@ async def create_model(files: list[UploadFile] = File(...)):
     images = [_read(f, await f.read()) for f in files]
     det = FewShotDetector(CKPT, RES).fit(images)
     mid = uuid.uuid4().hex[:10]
-    _models[mid] = {"detector": det, "threshold": det.threshold_hint(images), "n": len(images)}
+    _models[mid] = {"detector": det, "threshold": det.threshold, "n": len(images)}
     return {"model_id": mid, "references": len(images), "threshold": _models[mid]["threshold"]}
 
 
