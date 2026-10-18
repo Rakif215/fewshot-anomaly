@@ -47,7 +47,7 @@ No single scorer wins both tasks: nearest neighbour detects best, PCA localises 
 ## Limitations (read before trusting a verdict)
 
 - **The ranking is good, the cut-off is not always.** AUROC is 0.89-0.95, but the decision threshold is calibrated from only the reference photos, so where it lands varies by part (circuit board: very strict; macaroni: loose). The demo has a sensitivity slider for this.
-- **Results depend on which reference photos you show.** On the circuit board, a different random choice of 4 references caught 84% of defects instead of 5%. More and more varied references help.
+- **Results depend on which reference photos you show.** On the circuit board, another random choice of 4 references gave image AUROC 0.95 instead of 0.89. More and more varied references help.
 - The demo runs the small model on CPU so it answers in seconds; the paper-setting numbers use the giant model.
 - Example photos are from VisA and were chosen to show typical cases, including one miss per part.
 
