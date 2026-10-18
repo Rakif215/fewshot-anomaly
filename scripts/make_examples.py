@@ -12,15 +12,21 @@ from fsad.detector import FewShotDetector
 
 D, OUT = "datasets/VisA_pytorch/1cls", sys.argv[1]
 CATS = [("pcb4", "Circuit board"), ("macaroni1", "Macaroni"), ("capsules", "Capsules")]
+import io
+def prep(path):
+    """Exactly what the demo shows: a 448-px JPEG thumbnail."""
+    im = Image.open(path).convert("RGB"); im.thumbnail((448, 448))
+    b = io.BytesIO(); im.save(b, "JPEG", quality=85); b.seek(0)
+    return Image.open(b).convert("RGB")
 shutil.rmtree(OUT, ignore_errors=True)
 meta = {}
 for cat, label in CATS:
     os.makedirs(f"{OUT}/{cat}")
     refs = sorted(glob.glob(f"{D}/{cat}/train/good/*"))[:4]
-    det = FewShotDetector(res=448).fit([Image.open(p).convert("RGB") for p in refs])
+    det = FewShotDetector(res=448).fit([prep(p) for p in refs])
     good = sorted(glob.glob(f"{D}/{cat}/test/good/*")); bad = sorted(glob.glob(f"{D}/{cat}/test/bad/*"))
-    sg = np.array([det.score(Image.open(p).convert("RGB"))["score"] for p in good])
-    sb = np.array([det.score(Image.open(p).convert("RGB"))["score"] for p in bad])
+    sg = np.array([det.score(prep(p))["score"] for p in good])
+    sb = np.array([det.score(prep(p))["score"] for p in bad])
     thr = det.threshold
     base = thr / 1.0   # threshold = highest leave-one-out score of a held-out normal reference (margin 1.0)
     print(cat, "for information, other margins:", {m: (round(float(np.mean(sb > base * m)), 2), round(float(np.mean(sg > base * m)), 2)) for m in (0.8, 0.9, 1.0, 1.2)}, "(caught, false alarms)", flush=True)

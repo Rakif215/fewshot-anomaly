@@ -55,11 +55,12 @@ class FewShotDetector:
         self._feats = np.concatenate([v for views in per_image for v in views])
         self.n_reference = len(images)
 
-        # Held-out normal samples: (training features, patches to score) pairs.
+        # Held-out normal samples: (training features, views to score). Every view (original + flips/rotations) of the
+        # held-out image is scored, so the threshold rests on many scores, not on the maximum of a handful.
         if len(images) >= 2:
-            units = [(np.concatenate([v for j, views in enumerate(per_image) if j != i for v in views]), [per_image[i][0]])
+            units = [(np.concatenate([v for j, views in enumerate(per_image) if j != i for v in views]), per_image[i])
                      for i in range(len(images))]
-        else:   # one reference: hold out its flipped / rotated views
+        else:   # one reference: train on the original, hold out its flipped / rotated views
             units = [(per_image[0][0], per_image[0][1:] or [per_image[0][0]])]
         raws = []
         for train, held in units:
