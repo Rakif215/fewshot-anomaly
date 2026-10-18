@@ -54,3 +54,18 @@ Scores are rescaled per category from the test-patch score distribution (no labe
 
 Fusion is +1.3 over PCA alone and +0.4 over kNN alone on held-out categories. Raw numbers: `results_exp/small_k4.json`.
 Caveats: single seed, small model, simplified augmentation; not yet confirmed with the giant backbone.
+
+## Confirmation with the giant backbone (448 px, 4-shot, 3 seeds, all 12 VisA categories)
+
+Same `fsad/` pipeline, DINOv2-with-registers-giant, layers -12..-18. Mean over seeds 42/43/44 (± std across seeds). Raw: `results_exp/giant/`.
+
+| Variant | Image AUROC (12 cats) | Image AUROC (8 held-out) | Pixel AUROC (8 held-out) |
+|---|---|---|---|
+| PCA residual (99%) | 94.1 ± 0.3 | 93.8 ± 0.3 | **96.8** |
+| Nearest neighbour (k=3) | **95.4 ± 0.4** | **95.5 ± 0.5** | 96.0 |
+| Fusion PCA 99% + kNN 1 | 95.1 ± 0.4 | 95.1 ± 0.4 | 96.5 |
+
+Findings:
+- The small-model result did not carry over as a win: with the giant backbone, nearest neighbour alone is best at image level (+1.3 over PCA) and fusion is slightly below it (-0.3).
+- PCA gives the best pixel-level localisation; kNN the best image-level detection; fusion sits within 0.3-0.5 of the best on both, i.e. the best balance rather than the best on either.
+- Not directly comparable to the paper's table: 448 px instead of 672, 6 augmentations instead of 30, own scoring code.
