@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Few-shot defect inspection</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14171c;--mute:#5d6673;--line:#dfe3e8;--ok:#16794c;--bad:#b3261e;--accent:#2457d6}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--card:#171b21;--ink:#e8ebef;--mute:#9aa4b2;--line:#2a313b;--ok:#4cc38a;--bad:#ff7a70;--accent:#7aa2ff}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+main{max-width:920px;margin:0 auto;padding:24px 16px 56px}
+h1{font-size:1.5rem;margin:0 0 4px}p.lead{color:var(--mute);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.step{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-bottom:6px}
+button,input[type=file]{font:inherit}button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+button:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.thumbs img{height:64px;border-radius:6px;border:1px solid var(--line)}
+.result{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:640px){.result{grid-template-columns:1fr}}
+.result img{width:100%;border-radius:8px;border:1px solid var(--line)}
+.verdict{font-size:1.25rem;font-weight:600}.ok{color:var(--ok)}.bad{color:var(--bad)}
+small{color:var(--mute)}
+</style></head><body><main>
+<h1>Few-shot defect inspection</h1>
+<p class="lead">Show 1–8 photos of a good part. Then upload any photo of the same part and see whether it has a defect, and where.</p>
+<div class="card"><div class="step">Step 1 · reference photos (good parts)</div>
+<div class="row"><input id="refs" type="file" accept="image/*" multiple><button id="fit">Learn this part</button><span id="fitmsg"><small></small></span></div>
+<div class="thumbs" id="thumbs"></div></div>
+<div class="card"><div class="step">Step 2 · photo to inspect</div>
+<div class="row"><input id="test" type="file" accept="image/*"><button id="go" disabled>Inspect</button></div>
+<div id="out" style="margin-top:14px"></div></div>
+<small>No training happens: the model compares each image region with what it saw in the reference photos. Your images are processed in memory and not stored.</small>
+<script>
+let modelId=null;const $=id=>document.getElementById(id);
+$('refs').onchange=e=>{$('thumbs').innerHTML='';[...e.target.files].forEach(f=>{const i=new Image();i.src=URL.createObjectURL(f);$('thumbs').append(i)})};
+$('fit').onclick=async()=>{const fs=$('refs').files;if(!fs.length)return;const fd=new FormData();[...fs].forEach(f=>fd.append('files',f));
+ $('fit').disabled=true;$('fitmsg').textContent='Learning…';
+ try{const r=await fetch('/models',{method:'POST',body:fd});const j=await r.json();if(!r.ok)throw new Error(j.detail||r.status);
+  modelId=j.model_id;$('fitmsg').textContent='Ready ('+j.references+' reference photos)';$('go').disabled=false}
+ catch(e){$('fitmsg').textContent='Error: '+e.message}$('fit').disabled=false};
+$('go').onclick=async()=>{const f=$('test').files[0];if(!f||!modelId)return;const fd=new FormData();fd.append('file',f);
+ $('go').disabled=true;$('out').textContent='Inspecting…';
+ try{const r=await fetch('/models/'+modelId+'/inspect',{method:'POST',body:fd});const j=await r.json();if(!r.ok)throw new Error(j.detail||r.status);
+  $('out').innerHTML='<div class="verdict '+(j.defect?'bad':'ok')+'">'+(j.defect?'Defect likely':'Looks good')+'</div><small>score '+j.score.toFixed(2)+' · threshold '+j.threshold.toFixed(2)+'</small>'+
+  '<div class="result" style="margin-top:10px"><div><small>Your photo</small><img src="'+URL.createObjectURL(f)+'"></div><div><small>Where the model looks</small><img src="data:image/png;base64,'+j.overlay_png_base64+'"></div></div>'}
+ catch(e){$('out').textContent='Error: '+e.message}$('go').disabled=false};
+</script></main></body></html>

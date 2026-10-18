@@ -11,7 +11,7 @@ import os
 import uuid
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.responses import Response
+from fastapi.responses import FileResponse, Response
 from PIL import Image, UnidentifiedImageError
 
 from .detector import FewShotDetector
@@ -32,6 +32,11 @@ def _read(upload: UploadFile, data: bytes) -> Image.Image:
         return Image.open(io.BytesIO(data)).convert("RGB")
     except (UnidentifiedImageError, OSError):
         raise HTTPException(400, f"{upload.filename}: not a readable image")
+
+
+@app.get("/", include_in_schema=False)
+def demo_page():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "static", "index.html"))
 
 
 @app.get("/health")

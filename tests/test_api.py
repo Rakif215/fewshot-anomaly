@@ -47,3 +47,8 @@ def test_flow_good_vs_defect():
 def test_errors():
     assert client.post("/models", files=[("files", ("x.txt", b"not an image", "text/plain"))]).status_code == 400
     assert client.post("/models/nope/inspect", files={"file": ("a.png", png(good(1)), "image/png")}).status_code == 404
+
+
+def test_demo_page_is_served():
+    r = client.get("/")
+    assert r.status_code == 200 and "Few-shot defect inspection" in r.text
