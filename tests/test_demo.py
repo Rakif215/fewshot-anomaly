@@ -30,3 +30,11 @@ def test_everything_crossing_the_gpu_boundary_is_picklable():
     pickle.loads(pickle.dumps(model))                      # what learn() returns
     result = demo.inspect(model, Image.open(tests[1][0]).convert("RGB"))
     pickle.loads(pickle.dumps(result))                     # what inspect() returns
+
+
+def test_ui_builds_without_gradio_warnings():
+    """Gradio warns when it cannot recognise an event argument (e.g. gr.SelectData hidden by string annotations)."""
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        demo.build()

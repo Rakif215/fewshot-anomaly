@@ -1,6 +1,4 @@
 """Gradio demo logic and UI. Used by app.py (Hugging Face Space) and runnable locally: python app.py"""
-from __future__ import annotations
-
 import json
 import os
 from pathlib import Path
@@ -67,28 +65,44 @@ def build():
     labels = {m["label"]: cat for cat, m in meta.items()}
 
     def pick_example(label):
-        cat = labels[label]
-        refs, tests = example_images(cat)
-        model = learn(refs)
-        return model, [t[0] for t in tests], [(r, "reference (good)") for r in refs], f"Learned from {len(refs)} good photos. Now click a test photo below."
+        try:
+            cat = labels[label]
+            refs, tests = example_images(cat)
+            model = learn(refs)
+            return model, [t[0] for t in tests], [(r, "reference (good)") for r in refs], f"Learned from {len(refs)} good photos. Now click a test photo below."
+        except gr.Error:
+            raise
+        except Exception as e:
+            raise gr.Error(f"{type(e).__name__}: {e}")
 
     def pick_test(model, paths, evt: gr.SelectData):
         if model is None:
             raise gr.Error("Choose an example part first.")
-        return inspect(model, Image.open(paths[evt.index]).convert("RGB"))
+        try:
+            return inspect(model, Image.open(paths[evt.index]).convert("RGB"))
+        except gr.Error:
+            raise
+        except Exception as e:
+            raise gr.Error(f"{type(e).__name__}: {e}")
 
     def learn_upload(files):
         if not files:
             raise gr.Error("Upload 1-8 photos of a good part.")
-        imgs = [Image.open(f if isinstance(f, str) else f.name).convert("RGB") for f in files[:8]]
-        return learn(imgs), f"Learned from {len(imgs)} photos. Upload a photo to inspect."
+        try:
+            imgs = [Image.open(f if isinstance(f, str) else f.name).convert("RGB") for f in files[:8]]
+            return learn(imgs), f"Learned from {len(imgs)} photos. Upload a photo to inspect."
+        except Exception as e:
+            raise gr.Error(f"{type(e).__name__}: {e}")
 
     def inspect_upload(model, img):
         if model is None:
             raise gr.Error("Learn from your good photos first.")
         if img is None:
             raise gr.Error("Upload a photo to inspect.")
-        return inspect(model, img.convert("RGB"))
+        try:
+            return inspect(model, img.convert("RGB"))
+        except Exception as e:
+            raise gr.Error(f"{type(e).__name__}: {e}")
 
     with gr.Blocks(title="Few-shot defect inspection") as demo:
         gr.Markdown("# Few-shot defect inspection\nShow the model a few photos of a good part. It flags defects in new photos and shows where. "
