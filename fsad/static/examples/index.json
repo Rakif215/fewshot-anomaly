@@ -21,9 +21,9 @@
    ]
   ],
   "stats": {
-   "auroc": 0.891,
-   "defects_caught": 0.38,
-   "good_flagged": 0.08,
+   "auroc": 0.889,
+   "defects_caught": 0.05,
+   "good_flagged": 0.02,
    "n_good": 101,
    "n_defect": 100
   }
@@ -50,9 +50,9 @@
    ]
   ],
   "stats": {
-   "auroc": 0.939,
-   "defects_caught": 0.84,
-   "good_flagged": 0.12,
+   "auroc": 0.935,
+   "defects_caught": 0.96,
+   "good_flagged": 0.24,
    "n_good": 100,
    "n_defect": 100
   }
@@ -79,9 +79,9 @@
    ]
   ],
   "stats": {
-   "auroc": 0.947,
-   "defects_caught": 0.65,
-   "good_flagged": 0.03,
+   "auroc": 0.95,
+   "defects_caught": 0.73,
+   "good_flagged": 0.05,
    "n_good": 60,
    "n_defect": 100
   }
