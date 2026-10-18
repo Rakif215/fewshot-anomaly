@@ -42,7 +42,17 @@ def test_ui_builds_without_gradio_warnings():
 
 
 def test_example_photos_behave_as_labelled_on_every_example_set():
-    """Good example below the threshold, both 'defective' examples above it; stats are present and consistent."""
+    """Good example below the threshold, both 'defective' examples above it; stats are present and consistent.
+    Runs at the demo's real resolution (the examples and statistics were produced at 448 px)."""
+    old_res, old_ext = demo.RES, demo._extractor
+    demo.RES, demo._extractor = 448, None
+    try:
+        _check_examples()
+    finally:
+        demo.RES, demo._extractor = old_res, old_ext
+
+
+def _check_examples():
     for cat, m in demo.example_meta().items():
         refs, tests = demo.example_images(cat)
         model = demo.learn(refs)
