@@ -23,13 +23,18 @@ def pca_scorer(train: np.ndarray, ev: float = 0.99):
 
 
 def knn_scorer(train: np.ndarray, k: int = 1):
-    """Mean distance to the k nearest normal patches. Uses the GPU when there is one."""
+    """Mean distance to the k nearest normal patches. Uses the GPU when there is one.
+
+    The bank stays on the CPU and moves to the GPU inside each call, so the scorer also survives
+    environments where the GPU is only attached for the duration of a call (Hugging Face ZeroGPU).
+    """
     import torch
-    dev = "cuda" if torch.cuda.is_available() else "cpu"
-    bank = torch.from_numpy(train).float().to(dev)
-    chunk = 2048 if dev == "cuda" else 4096
+    bank_cpu = torch.from_numpy(train).float()
 
     def score(x):
+        dev = "cuda" if torch.cuda.is_available() else "cpu"
+        bank = bank_cpu.to(dev)
+        chunk = 2048 if dev == "cuda" else 4096
         out = []
         for i in range(0, len(x), chunk):  # chunk the queries: a full distance matrix does not fit in memory
             q = torch.from_numpy(x[i:i + chunk]).float().to(dev)

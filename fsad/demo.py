@@ -11,6 +11,13 @@ from .detector import FewShotDetector
 from .features import Extractor
 from .render import overlay
 
+try:  # Hugging Face ZeroGPU: the GPU is attached only inside functions decorated with spaces.GPU
+    import spaces
+    gpu = spaces.GPU(duration=60)
+except Exception:  # not on a Space (or no spaces package): run as a plain function
+    def gpu(fn):
+        return fn
+
 EXAMPLES = Path(__file__).parent / "static" / "examples"
 CKPT = os.environ.get("FSAD_CKPT", "facebook/dinov2-with-registers-small")
 RES = int(os.environ.get("FSAD_RES", "448"))
@@ -28,11 +35,13 @@ def example_meta() -> dict:
     return json.loads((EXAMPLES / "index.json").read_text())
 
 
+@gpu
 def learn(images: list[Image.Image]) -> dict:
     det = FewShotDetector(CKPT, RES, extractor=extractor()).fit(images)
     return {"detector": det, "threshold": det.threshold_hint(images), "n": len(images)}
 
 
+@gpu
 def inspect(model: dict, image: Image.Image):
     """Return (verdict markdown, overlay image, score text)."""
     out = model["detector"].score(image, out_size=min(image.size[0], 512))
