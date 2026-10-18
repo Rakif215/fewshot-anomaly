@@ -23,8 +23,8 @@ AUGMENTATIONS = (
 
 
 class FewShotDetector:
-    def __init__(self, ckpt="facebook/dinov2-with-registers-small", res=448, layers=(-4, -5), ev=0.99, knn_k=1, augment=True):
-        self.extractor = Extractor(ckpt, res, layers)
+    def __init__(self, ckpt="facebook/dinov2-with-registers-small", res=448, layers=(-4, -5), ev=0.99, knn_k=1, augment=True, extractor=None):
+        self.extractor = extractor or Extractor(ckpt, res, layers)
         self.ev, self.knn_k, self.augment = ev, knn_k, augment
         self._pca = self._knn = None
         self.n_reference = 0
