@@ -1,4 +1,6 @@
 """Patch-level anomaly scorers. Each takes (N, C) normal patches and returns a function scoring (M, C) patches."""
+import os
+
 import numpy as np
 
 
@@ -32,7 +34,7 @@ def knn_scorer(train: np.ndarray, k: int = 1):
     bank_cpu = torch.from_numpy(train).float()
 
     def score(x):
-        dev = "cuda" if torch.cuda.is_available() else "cpu"
+        dev = os.environ.get("FSAD_DEVICE") or ("cuda" if torch.cuda.is_available() else "cpu")
         bank = bank_cpu.to(dev)
         chunk = 2048 if dev == "cuda" else 4096
         out = []

@@ -9,12 +9,17 @@ from .detector import FewShotDetector
 from .features import Extractor
 from .render import overlay
 
-try:  # Hugging Face ZeroGPU: the GPU is attached only inside functions decorated with spaces.GPU
+# Hugging Face ZeroGPU Spaces refuse to start unless one function is marked with spaces.GPU, but every visitor has a small
+# GPU quota that a demo would burn through in a few clicks. The small model is fast enough on CPU, so the real work runs on
+# CPU (FSAD_DEVICE=cpu, set in app.py) and the marked function below is only a placeholder that is never called.
+try:
     import spaces
-    gpu = spaces.GPU(duration=60)
-except Exception:  # not on a Space (or no spaces package): run as a plain function
-    def gpu(fn):
-        return fn
+
+    @spaces.GPU
+    def _gpu_placeholder():
+        return True
+except Exception:  # not on a Space (or no spaces package)
+    pass
 
 EXAMPLES = Path(__file__).parent / "static" / "examples"
 CKPT = os.environ.get("FSAD_CKPT", "facebook/dinov2-with-registers-small")
@@ -33,14 +38,12 @@ def example_meta() -> dict:
     return json.loads((EXAMPLES / "index.json").read_text())
 
 
-@gpu
 def learn(images: list[Image.Image]) -> dict:
     """Fit on the reference photos. Returns plain data only (no functions), because ZeroGPU pickles what crosses the call."""
     det = FewShotDetector(CKPT, RES, extractor=extractor()).fit(images)
     return {"state": det.state(), "threshold": det.threshold, "n": len(images)}
 
 
-@gpu
 def inspect(model: dict, image: Image.Image, sensitivity: float = 1.0):
     """Return (verdict markdown, overlay image, score text). sensitivity < 1 lowers the threshold (more alerts)."""
     det = FewShotDetector.from_state(model["state"], extractor())

@@ -1,4 +1,6 @@
 """Frozen DINOv2 (with registers) patch features."""
+import os
+
 import numpy as np
 import torch
 from PIL import Image
@@ -9,7 +11,7 @@ MEAN, STD = np.array([0.485, 0.456, 0.406], np.float32), np.array([0.229, 0.224,
 
 class Extractor:
     def __init__(self, ckpt="facebook/dinov2-with-registers-small", res=448, layers=(-4, -5), device=None):
-        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = device or os.environ.get("FSAD_DEVICE") or ("cuda" if torch.cuda.is_available() else "cpu")
         self.model = AutoModel.from_pretrained(ckpt).to(self.device).eval()
         self.res, self.layers = res, list(layers)
         cfg = self.model.config
