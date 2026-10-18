@@ -38,15 +38,30 @@ class FewShotDetector:
     def fit(self, images: list[Image.Image]) -> "FewShotDetector":
         if not images:
             raise ValueError("at least one reference image is required")
+        hid = self.extractor.model.config.hidden_size
         views = [aug(img.convert("RGB")) for img in images for aug in (AUGMENTATIONS if self.augment else AUGMENTATIONS[:1])]
-        feats = np.concatenate([self.extractor(v).reshape(-1, self.extractor.model.config.hidden_size) for v in views])
-        self._pca = pca_scorer(feats, ev=self.ev)
-        self._knn = knn_scorer(feats, k=self.knn_k)
+        self._feats = np.concatenate([self.extractor(v).reshape(-1, hid) for v in views]).astype(np.float32)
+        # The un-augmented originals calibrate the score scale.
+        self._ref = np.concatenate([self.extractor(i.convert("RGB")).reshape(-1, hid) for i in images]).astype(np.float32)
         self.n_reference = len(images)
-        # Calibrate the score scale on the reference images (held out view = the un-augmented originals).
-        ref = np.concatenate([self.extractor(i.convert("RGB")).reshape(-1, feats.shape[1]) for i in images])
-        self._ref_scale = (self._raw(ref).mean(0), self._raw(ref).std(0) + 1e-9)
+        return self._build()
+
+    def _build(self) -> "FewShotDetector":
+        self._pca = pca_scorer(self._feats, ev=self.ev)
+        self._knn = knn_scorer(self._feats, k=self.knn_k)
+        raw = self._raw(self._ref)
+        self._ref_scale = (raw.mean(0), raw.std(0) + 1e-9)
         return self
+
+    def state(self) -> dict:
+        """Plain arrays and numbers only (picklable), so a fitted detector can cross process boundaries."""
+        return {"feats": self._feats, "ref": self._ref, "ev": self.ev, "knn_k": self.knn_k, "n": self.n_reference}
+
+    @classmethod
+    def from_state(cls, st: dict, extractor) -> "FewShotDetector":
+        det = cls(ev=st["ev"], knn_k=st["knn_k"], extractor=extractor)
+        det._feats, det._ref, det.n_reference = st["feats"], st["ref"], st["n"]
+        return det._build()
 
     def _raw(self, flat: np.ndarray) -> np.ndarray:
         return np.stack([self._pca(flat), self._knn(flat)], axis=1)

@@ -20,3 +20,13 @@ def test_example_flow_scores_defect_higher():
 
 def test_ui_builds():
     assert demo.build() is not None
+
+
+def test_everything_crossing_the_gpu_boundary_is_picklable():
+    import pickle
+    cat = next(iter(demo.example_meta()))
+    refs, tests = demo.example_images(cat)
+    model = demo.learn(refs)
+    pickle.loads(pickle.dumps(model))                      # what learn() returns
+    result = demo.inspect(model, Image.open(tests[1][0]).convert("RGB"))
+    pickle.loads(pickle.dumps(result))                     # what inspect() returns

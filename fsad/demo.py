@@ -37,14 +37,16 @@ def example_meta() -> dict:
 
 @gpu
 def learn(images: list[Image.Image]) -> dict:
+    """Fit on the reference photos. Returns plain data only (no functions), because ZeroGPU pickles what crosses the call."""
     det = FewShotDetector(CKPT, RES, extractor=extractor()).fit(images)
-    return {"detector": det, "threshold": det.threshold_hint(images), "n": len(images)}
+    return {"state": det.state(), "threshold": det.threshold_hint(images), "n": len(images)}
 
 
 @gpu
 def inspect(model: dict, image: Image.Image):
     """Return (verdict markdown, overlay image, score text)."""
-    out = model["detector"].score(image, out_size=min(image.size[0], 512))
+    det = FewShotDetector.from_state(model["state"], extractor())
+    out = det.score(image, out_size=min(image.size[0], 512))
     limit = model["threshold"]
     defect = out["score"] > limit
     verdict = f"## {'🔴 Defect likely' if defect else '🟢 Looks good'}"
