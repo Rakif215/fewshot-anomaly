@@ -36,6 +36,16 @@ Within 0.3 points on all three. Pixel AUROC is 98.3-98.5 and AU-PRO 95.4-96.0.
 
 No single scorer wins both tasks: nearest neighbour detects best, PCA localises best, the fusion sits within about 0.5 of the best on each. (An earlier small-model run suggested the fusion was a clear win; the giant-model confirmation did not support that.) Not directly comparable to table 1: lower resolution, fewer augmentations, own scoring code.
 
+**2b. The same comparison at the paper setting** (own implementation, giant backbone, 672 px, 30 rotation augmentations, seed 42, 12 VisA categories, image AUROC)
+
+| Scorer | 1-shot | 2-shot | 4-shot |
+|---|---|---|---|
+| PCA residual | 92.2 | 92.5 | 93.4 |
+| Nearest neighbour (k=3) | **94.2** | **94.3** | **95.2** |
+| Fusion | 93.6 | 93.8 | 94.8 |
+
+Same picture as in 2: nearest neighbour detects best, PCA and the fusion localise best (pixel AUROC 97.1-97.2 against 96.5-96.8). This implementation's PCA is 0.8-1.6 points below the official code in the table of 1, so these numbers are for comparing the three scorers with each other, not for comparing with the paper. One seed; full table, per-category numbers and caveats in `RESULTS.md`.
+
 **3. The demo detector on real parts** (small backbone, 448 px, 4 reference photos, every VisA test image of the part)
 
 | Part | Image AUROC | Defects caught | Good parts flagged |

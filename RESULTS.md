@@ -69,3 +69,25 @@ Findings:
 - The small-model result did not carry over as a win: with the giant backbone, nearest neighbour alone is best at image level (+1.3 over PCA) and fusion is slightly below it (-0.3).
 - PCA gives the best pixel-level localisation; kNN the best image-level detection; fusion sits within 0.3-0.5 of the best on both, i.e. the best balance rather than the best on either.
 - Not directly comparable to the paper's table: 448 px instead of 672, 6 augmentations instead of 30, own scoring code.
+
+## The same comparison at the paper setting (giant backbone, 672 px, 30 rotation augmentations, seed 42, all 12 VisA categories)
+
+Own `fsad/` pipeline, DINOv2-with-registers-giant, layers -12..-18, 1, 2 and 4 shots, one seed. Run on a Kaggle GPU (`kaggle_paperfusion/run.py`); raw per-category files are in `results_exp/giant_paper_672/`, and `scripts/aggregate_paper_setting.py` rebuilds this table from them. Mean over the 12 categories; every variant that was run is listed, none was selected on the test categories.
+
+| Scorer | 1-shot image / pixel | 2-shot image / pixel | 4-shot image / pixel |
+|---|---|---|---|
+| PCA residual (99% variance) | 92.2 / 97.1 | 92.5 / 97.2 | 93.4 / 97.1 |
+| Nearest neighbour (k=1) | 94.2 / 96.6 | 94.2 / 96.8 | 95.1 / 96.9 |
+| Nearest neighbour (k=3) | 94.2 / 96.5 | 94.3 / 96.8 | 95.2 / 96.8 |
+| Fusion PCA 99% + kNN 1 | 93.6 / 97.1 | 93.8 / 97.2 | 94.8 / 97.2 |
+
+For reference, the official SubspaceAD code in the same setting (section above): image AUROC 93.0 / 94.1 / 94.7, pixel AUROC 98.3 / 98.4 / 98.5.
+
+Findings:
+- Same ordering as the 448 px runs: nearest neighbour detects best at every shot count (+1.8 to +2.0 image AUROC over our PCA), PCA and the fusion localise best (pixel 97.1-97.2 against 96.5-96.9 for kNN), and the fusion sits in between at image level (0.4-0.6 below kNN, 1.3-1.4 above PCA). The fusion is again the best balance, not the best on either task.
+- At 4 shots kNN (k=3) beats PCA in 10 of 12 categories. The gap is concentrated in three: macaroni2 (77.9 vs 87.8), pcb3 (87.5 vs 93.4) and pcb2 (91.1 vs 93.7).
+- Our compact PCA implementation is 0.8-1.6 points of image AUROC below the official code at the same setting (92.2 vs 93.0, 92.5 vs 94.1, 93.4 vs 94.7) and 1.2-1.4 points below in pixel AUROC. The cause was not investigated (the pipelines differ in details such as augmentation sampling and score aggregation), so absolute numbers from `fsad/` should not be read as a reproduction of the paper.
+- Our 3-seed 448 px runs gave a higher PCA image AUROC (94.1 at 4 shots, 6 augmentations) than this single-seed 672 px run (93.4, 30 random rotations). Resolution and augmentation differ together, so this does not show that 672 px hurts.
+
+Caveats: one seed (42), so differences below about 0.5 points are within the seed-to-seed spread seen at 448 px (±0.3-0.5). The nearest-neighbour scorer is a different method from SubspaceAD, so its numbers above the paper's table are not an apples-to-apples comparison and are not a claim of beating the paper.
+
